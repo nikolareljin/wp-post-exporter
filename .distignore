@@ -1,0 +1,17 @@
+/.git
+/.github
+/.gitignore
+/.editorconfig
+/composer.lock
+/package.json
+/package-lock.json
+/node_modules
+/vendor
+/tests
+/__tests__
+/bin
+/phpunit.*
+/phpcs.xml
+/.idea
+/.vscode
+

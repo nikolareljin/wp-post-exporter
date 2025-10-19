@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="WP Post Exporter Coding Standards">
+    <description>WordPress Coding Standards for WP Post Exporter</description>
+
+    <file>inc</file>
+    <file>wp-post-exporter.php</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>assets/*</exclude-pattern>
+    <exclude-pattern>languages/*</exclude-pattern>
+
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg value="sp"/>
+
+    <rule ref="WordPress-Core"/>
+    <rule ref="WordPress-Docs"/>
+    <rule ref="WordPress-Extra"/>
+
+    <!-- Allow namespaces and modern PHP while still respecting WP standards -->
+    <config name="testVersion" value="7.4-"/>
+</ruleset>
+

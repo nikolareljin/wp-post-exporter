@@ -1,0 +1,39 @@
+{
+  "name": "nikolareljin/wp-post-exporter",
+  "description": "Export and import individual WordPress posts (with meta, terms, and revisions).",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "homepage": "https://github.com/nikolareljin/wp-post-exporter",
+  "keywords": ["wordpress", "plugin", "export", "import", "posts", "revisions"],
+  "support": {
+    "issues": "https://github.com/nikolareljin/wp-post-exporter/issues",
+    "source": "https://github.com/nikolareljin/wp-post-exporter"
+  },
+  "authors": [
+    {
+      "name": "Nikola Reljin",
+      "homepage": "https://profiles.wordpress.org/nikolareljin/"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "wp-coding-standards/wpcs": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nikolareljin\\WpPostExporter\\": "inc/"
+    }
+  },
+  "scripts": {
+    "lint": "phpcs -p",
+    "lint:fix": "phpcbf"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "1.0.x-dev"
+    }
+  }
+}
