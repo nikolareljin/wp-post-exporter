@@ -21,6 +21,7 @@ Features
 - Works with all public post types; sets current user as the author on import
 - Adds an Export action in Posts/Pages list rows
 - Adds Tools → Post Import with a file upload form
+- Robust UTF-8 handling: exports HTML‑entity encode content/meta; imports decode to avoid double‑encoding
 
 Perfect for
 - Migrating content between environments
