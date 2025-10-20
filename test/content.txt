@@ -1,0 +1,13 @@
+UTF-8 multilingual content test
+
+English: The quick brown fox jumps over the lazy dog.
+日本語: こんにちは世界。これはUTF-8のテストです。
+中文: 你好，世界。這是一個UTF-8測試。
+한국어: 안녕하세요 세계. UTF-8 테스트입니다.
+Русский: Привет, мир. Это тест UTF-8.
+عربي: مرحبا بالعالم. هذا اختبار UTF-8.
+Ελληνικά: Γειά σου Κόσμε. Δοκιμή UTF-8.
+Emoji: 😀 🚀 🌍
+
+Some HTML entities & special chars: &amp; &lt; &gt; " ' — – …
+
