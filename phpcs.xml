@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="WP Post Exporter Coding Standards">
-    <description>WordPress Coding Standards for WP Post Exporter</description>
+    <description>WordPress Coding Standards for WP Post Exporter (PHP 8.2+).</description>
 
     <!-- Files are provided via CLI path. -->
 
@@ -14,11 +14,21 @@
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
     <arg value="sp"/>
+    <config name="ignore_warnings_on_exit" value="1"/>
 
     <rule ref="WordPress-Core"/>
     <rule ref="WordPress-Docs"/>
     <rule ref="WordPress-Extra"/>
 
-    <!-- Allow namespaces and modern PHP while still respecting WP standards -->
-    <config name="testVersion" value="7.4-"/>
+    <!-- Target PHP and WordPress versions for compatibility checks. -->
+    <config name="testVersion" value="8.2-"/>
+    <config name="minimum_supported_wp_version" value="6.6"/>
+
+    <!-- Use the aggregate WordPress standard plus PHPCompatibility for WP. -->
+    <rule ref="WordPress">
+        <!-- Allow PSR-4 file naming for class files under inc/ -->
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+    </rule>
+    <rule ref="PHPCompatibilityWP"/>
 </ruleset>
