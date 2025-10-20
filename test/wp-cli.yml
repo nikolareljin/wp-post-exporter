@@ -1,0 +1,7 @@
+path: /var/www/html
+url: http://localhost:8080
+color: false
+disable_wp_cron: true
+apache_modules:
+  - mod_rewrite
+
