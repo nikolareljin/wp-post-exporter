@@ -18,10 +18,7 @@ jobs:
           tools: composer
 
       - name: Install dev dependencies
-        working-directory: wp-post-exporter
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Run PHPCS
-        working-directory: wp-post-exporter
         run: vendor/bin/phpcs -p
-
