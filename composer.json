@@ -32,6 +32,11 @@
     "lint": "phpcs -p",
     "lint:fix": "phpcbf"
   },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
   "extra": {
     "branch-alias": {
       "dev-main": "1.0.x-dev"
