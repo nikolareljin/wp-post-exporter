@@ -23,7 +23,7 @@ class Import {
             <input type="hidden" name="action" value="wp_post_exporter_import"/>
             <input type="file" accept="application/json" id="upload" name="upload"/>
             <?php
-            wp_nonce_field( admin_url( 'admin-post.php' ), 'post_import_nonce' );
+            wp_nonce_field( 'wp_post_exporter_import', 'post_import_nonce' );
             submit_button( __( 'Import Post', 'wp-post-exporter' ), 'secondary', 'submit', false );
             ?>
         </form>
@@ -36,32 +36,31 @@ class Import {
      * @return void
      */
     public static function post_import() {
-        if ( $_POST ) {
+        if ( 'POST' === $_SERVER['REQUEST_METHOD'] ) {
             // Capability check: require ability to edit posts.
             if ( ! current_user_can( 'edit_posts' ) ) {
                 wp_die( esc_html__( 'Insufficient permissions.', 'wp-post-exporter' ) );
             }
 
             // Check if form was submitted. Then process the file.
-            if (
-                ! isset( $_POST['post_import_nonce'] )
-                || ! wp_verify_nonce( $_POST['post_import_nonce'], admin_url( 'admin-post.php' ) )
-            ) {
-                print esc_html__( 'Sorry, your nonce did not verify.', 'wp-post-exporter' );
-                exit;
+            if ( ! isset( $_POST['post_import_nonce'] ) || ! check_admin_referer( 'wp_post_exporter_import', 'post_import_nonce' ) ) {
+                wp_die( esc_html__( 'Sorry, your nonce did not verify.', 'wp-post-exporter' ) );
             }
 
-            if ( isset( $_POST['action'] ) && 'wp_post_exporter_import' === $_POST['action'] && isset( $_POST['submit'] ) ) {
+            $action = isset( $_POST['action'] ) ? sanitize_key( wp_unslash( $_POST['action'] ) ) : '';
+            $submit = isset( $_POST['submit'] );
+
+            if ( 'wp_post_exporter_import' === $action && $submit ) {
                 // Now, parse the JSON file and create a new post.
                 if ( isset( $_FILES['upload']['name'] ) && $_FILES['upload']['name'] ) {
-                    if ( ! $_FILES['upload']['error'] ) {
+                    if ( empty( $_FILES['upload']['error'] ) ) {
                         // validate the file
-                        $new_file_name = $_FILES['upload']['tmp_name'];
+                        $new_file_name = isset( $_FILES['upload']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['upload']['tmp_name'] ) ) : '';
                         if ( ! file_exists( $new_file_name ) ) {
                             wp_die( esc_html__( 'File does not exist!', 'wp-post-exporter' ) . ' ' . $new_file_name );
                         }
                         // can't be larger than ~1MB
-                        if ( $_FILES['upload']['size'] > 1000000 ) {
+                        if ( isset( $_FILES['upload']['size'] ) && (int) $_FILES['upload']['size'] > 1000000 ) {
                             wp_die( esc_html__( 'Your file size is too large.', 'wp-post-exporter' ) );
                         } else {
                             try {
@@ -155,7 +154,7 @@ class Import {
                                 // Store the current post data.
                                 $post_data['ID'] = $post_id;
                                 // Add prefix to the title - to allow easier detection of the imported posts.
-                                $post_data['post_title'] = 'Imported: ' . $post_data['post_title'];
+                                $post_data['post_title'] = sprintf( __( 'Imported: %s', 'wp-post-exporter' ), $post_data['post_title'] );
                                 wp_update_post( $post_data );
                                 wp_save_post_revision( $post_id );
 
@@ -187,12 +186,13 @@ class Import {
                                 }
 
                             } catch ( \Exception $e ) {
-                                wp_die( $e->getMessage() );
+                                wp_die( esc_html( $e->getMessage() ) );
                             }
                         }
 
                         // Open the dashboard and list of all the articles.
-                        wp_redirect( admin_url( 'edit.php' ) );
+                        wp_safe_redirect( admin_url( 'edit.php' ) );
+                        exit;
                     }
                 } else {
                     wp_die( esc_html__( 'No file was uploaded.', 'wp-post-exporter' ) );

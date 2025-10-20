@@ -39,11 +39,13 @@ class Export {
      * @return array
      */
     public static function add_export_link_to_post_row_actions( $actions, $post ) {
-        $actions['export'] = sprintf(
-            '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
-            esc_url( self::get_export_link( $post ) ),
-            esc_html__( 'Export', 'wp-post-exporter' )
-        );
+        if ( current_user_can( 'export' ) ) {
+            $actions['export'] = sprintf(
+                '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+                esc_url( self::get_export_link( $post ) ),
+                esc_html__( 'Export', 'wp-post-exporter' )
+            );
+        }
 
         return $actions;
     }
@@ -55,9 +57,11 @@ class Export {
      * @return string
      */
     public static function get_export_link( $post ) {
+        $nonce = wp_create_nonce( 'wp_post_exporter_export_' . $post->ID );
         return add_query_arg( [
-            'action' => 'wp_post_exporter_export',
-            'post'   => $post->ID,
+            'action'   => 'wp_post_exporter_export',
+            'post'     => $post->ID,
+            '_wpnonce' => $nonce,
         ], admin_url( 'admin-post.php' ) );
     }
 
@@ -83,25 +87,32 @@ class Export {
      * @return void
      */
     public static function export_post_link_action() {
-        if ( ! isset( $_GET['action'] ) || 'wp_post_exporter_export' !== $_GET['action'] ) {
+        $action = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+        if ( 'wp_post_exporter_export' !== $action ) {
             return;
         }
 
-        if ( ! isset( $_GET['post'] ) ) {
-            return;
+        $post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+        $nonce   = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
+        if ( ! $post_id || ! wp_verify_nonce( $nonce, 'wp_post_exporter_export_' . $post_id ) ) {
+            wp_die( esc_html__( 'Invalid request.', 'wp-post-exporter' ) );
         }
 
-        $post      = get_post( (int) $_GET['post'] );
-        $site_name = self::get_site_name();
+        if ( ! current_user_can( 'export' ) ) {
+            wp_die( esc_html__( 'Insufficient permissions.', 'wp-post-exporter' ) );
+        }
 
+        $post = get_post( $post_id );
         if ( ! $post instanceof \WP_Post ) {
-            return;
+            wp_die( esc_html__( 'Post not found.', 'wp-post-exporter' ) );
         }
 
-        $export = self::export_post( $post );
+        $site_name = self::get_site_name();
+        $export    = self::export_post( $post );
 
         // Current date in format YYYY-mm-dd_HH-ii-ss
-        $current_date = date( 'Y-m-d--H-i-s' );
+        $current_date = gmdate( 'Y-m-d--H-i-s' );
 
         $filename = sprintf(
             '%s-%s-%s.%s.json',
@@ -111,14 +122,10 @@ class Export {
             $current_date
         );
 
-        @header( 'Content-Type: application/json' );
-        @header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-        @header( 'Pragma: no-cache' );
-        @header( 'Expires: 0' );
-
-        echo wp_json_encode( $export );
-
-        exit;
+        // Use WordPress helper to send JSON with proper headers and exit.
+        nocache_headers();
+        header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+        wp_send_json( $export );
     }
 
     /**
@@ -130,15 +137,7 @@ class Export {
      * @return array
      */
     public static function export_post( $post, $with_revisions = true ) {
-        if ( ! isset( $_GET['post'] ) && ! ( $post instanceof \WP_Post ) ) {
-            return [];
-        }
-
-        if ( ! $post instanceof \WP_Post ) {
-            $post = get_post( (int) $_GET['post'] );
-        }
-
-        if ( ! $post instanceof \WP_Post ) {
+        if ( ! ( $post instanceof \WP_Post ) ) {
             return [];
         }
 
