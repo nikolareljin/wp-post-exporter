@@ -21,9 +21,12 @@ jobs:
           php-version: '8.2'
 
       - name: Build ZIP
+        run: bash bin/build-zip.sh
+
+      - name: List ZIP
         run: |
-          cd wp-post-exporter
-          bash bin/build-zip.sh
+          echo "dist directory contents:"
+          ls -lah dist || true
 
       - name: WordPress.org Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
@@ -33,4 +36,3 @@ jobs:
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-
