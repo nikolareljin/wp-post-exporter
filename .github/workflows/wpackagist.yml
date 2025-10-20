@@ -1,0 +1,36 @@
+name: WPackagist Refresh
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+env:
+  PLUGIN_SLUG: wp-post-exporter
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if WP.org SVN repo exists
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y subversion
+          if svn ls https://plugins.svn.wordpress.org/${{ env.PLUGIN_SLUG }} > /dev/null 2>&1; then
+            echo "SVN_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "SVN_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Ping WPackagist (best-effort)
+        if: env.SVN_EXISTS == 'true'
+        run: |
+          echo "Requesting WPackagist refresh for plugin $PLUGIN_SLUG…"
+          # WPackagist updates periodically; this is a best-effort ping. If they provide a refresh endpoint, call it here.
+          # Placeholder curl example (may need adjustment if/when WPackagist documents an API):
+          curl -fsS https://wpackagist.org/search?q=${PLUGIN_SLUG} >/dev/null || true
+
+      - name: Skip refresh (SVN repo not found)
+        if: env.SVN_EXISTS != 'true'
+        run: echo "SVN repo not found; WPackagist refresh skipped."
+

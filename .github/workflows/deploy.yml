@@ -28,11 +28,28 @@ jobs:
           echo "dist directory contents:"
           ls -lah dist || true
 
+      - name: Check if WP.org SVN repo exists
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y subversion
+          if svn ls https://plugins.svn.wordpress.org/wp-post-exporter > /dev/null 2>&1; then
+            echo "SVN_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "SVN_EXISTS=false" >> $GITHUB_ENV
+          fi
+
       - name: WordPress.org Plugin Deploy
+        if: env.SVN_EXISTS == 'true'
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
-          slug: wp-post-exporter
           generate-zip: false
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+
+      - name: Dry-run deploy (SVN repo not found)
+        if: env.SVN_EXISTS != 'true'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: false
+          dry-run: true
