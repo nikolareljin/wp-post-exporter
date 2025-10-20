@@ -12,3 +12,6 @@ See `readme.txt` for WordPress.org metadata.
 Export and Import Wordpress posts
 
 # Instructions
+- On the source website, on the Posts list, click the "Export" link below the post you need to export.
+- Store the JSON file locally
+- On the destination website, click the link "Tools" > "Post Import".
