@@ -29,7 +29,7 @@
     }
   },
   "scripts": {
-    "lint": "phpcs -p",
+    "lint": "phpcs -p -s .",
     "lint:fix": "phpcbf"
   },
   "config": {
