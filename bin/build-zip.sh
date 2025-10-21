@@ -10,6 +10,9 @@ BUILD_DIR=".build/${PLUGIN_SLUG}"
 rm -rf .build
 mkdir -p "${BUILD_DIR}"
 
+# Remove previous ZIP if exists
+rm -f "dist/${PLUGIN_SLUG}.zip" || true
+
 # Sync files while excluding from .distignore if present
 # Sync files while excluding from .distignore if present
 if [[ -f .distignore ]]; then
