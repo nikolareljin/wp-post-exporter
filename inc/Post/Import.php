@@ -66,7 +66,7 @@ class Import {
 							// Validate the file.
 						$new_file_name = isset( $_FILES['upload']['tmp_name'] ) ? sanitize_text_field( wp_unslash( $_FILES['upload']['tmp_name'] ) ) : '';
 						if ( ! file_exists( $new_file_name ) ) {
-				wp_die( esc_html__( 'File does not exist!', 'nr-post-exporter' ) . ' ' . esc_html( $new_file_name ) );
+				      wp_die( esc_html__( 'File does not exist!', 'nr-post-exporter' ) . ' ' . esc_html( $new_file_name ) );
 						}
 							// Can't be larger than ~1MB.
 						if ( isset( $_FILES['upload']['size'] ) && (int) $_FILES['upload']['size'] > 1000000 ) {

@@ -211,7 +211,7 @@ class Export {
 		}
 
 		if ( is_string( $value ) ) {
-            // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.htmlentities_htmlspecialchars -- Internal normalization for export payload.
+      // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.htmlentities_htmlspecialchars -- Internal normalization for export payload.
 			return htmlentities( $value, ENT_QUOTES, 'UTF-8' );
 		}
 
@@ -250,7 +250,7 @@ class Export {
 				// Get terms for the post.
 				$terms = get_the_terms( $post_id, $taxonomy );
 			} catch ( \Exception $e ) {
-error_log( 'NR Post Exporter - Export terms: ' . $e->getMessage() );
+        error_log( 'NR Post Exporter - Export terms: ' . $e->getMessage() );
 				$terms = array();
 			}
 
