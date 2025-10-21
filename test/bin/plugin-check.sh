@@ -16,8 +16,14 @@ mkdir -p "$OUT_DIR"
 echo "[INFO] Ensuring containers are up…"
 $compose up -d db wordpress
 
+echo "[INFO] Waiting for DB to be ready…"
+sleep 30
+
 echo "[INFO] Ensuring WordPress is installed (multisite) …"
-$compose run --rm wpcli sh -lc "if ! wp core is-installed; then wp config set WP_ALLOW_MULTISITE true --raw || true; wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --skip-check || true; wp core multisite-install --url=localhost:8080 --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='admin' --admin_email='admin@example.com' --skip-email --subdomains=0; else echo 'WordPress already installed'; fi"
+$compose run --rm wpcli sh -lc 'test -f wp-config.php || wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --skip-check'
+$compose run --rm wpcli sh -lc 'wp config set WP_ALLOW_MULTISITE true --raw || true'
+
+$compose run --rm wpcli sh -lc "wp core is-installed || wp core multisite-install --url=localhost:8080 --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='admin' --admin_email='admin@example.com' --skip-email --subdomains=0"
 
 echo "[INFO] Activating ${PLUGIN_SLUG} …"
 $compose run --rm wpcli sh -lc "wp plugin activate ${PLUGIN_SLUG} --network || wp plugin activate ${PLUGIN_SLUG}"
