@@ -1,0 +1,47 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: NR Post Exporter 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/nikolareljin/nr-post-exporter/issues\n"
+"POT-Creation-Date: 2025-10-21 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: nr-post-exporter\n"
+
+#: nr-post-exporter/nr-post-exporter.php:1
+msgid "Post Import"
+msgstr ""
+
+#: nr-post-exporter/nr-post-exporter.php:1
+msgid "Import Post"
+msgstr ""
+
+#: nr-post-exporter/nr-post-exporter.php:1
+msgid "Upload a previously exported JSON file to create a copy of that post (including meta, taxonomies, and revisions)."
+msgstr ""
+
+#: nr-post-exporter/inc/Post/Export.php:1
+msgid "Export"
+msgstr ""
+
+#: nr-post-exporter/inc/Post/Import.php:1
+msgid "Insufficient permissions."
+msgstr ""
+
+#: nr-post-exporter/inc/Post/Import.php:1
+msgid "Sorry, your nonce did not verify."
+msgstr ""
+
+#: nr-post-exporter/inc/Post/Import.php:1
+msgid "File does not exist!"
+msgstr ""
+
+#: nr-post-exporter/inc/Post/Import.php:1
+msgid "Your file size is too large."
+msgstr ""
+
+#: nr-post-exporter/inc/Post/Import.php:1
+msgid "No file was uploaded."
+msgstr ""
+

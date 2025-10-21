@@ -1,7 +1,7 @@
 <?php
 // Usage: wp eval-file /workspace/wpcli-export.php <post_id> [--url=...] [--user=...]
 
-use Nikolareljin\WpPostExporter\Post\Export;
+use Nikolareljin\NrPostExporter\Post\Export;
 
 if (!defined('ABSPATH')) {
     exit(1);
