@@ -1,11 +1,11 @@
 <?php
 /**
- * Export handlers for WP Post Exporter plugin.
+ * Export handlers for NR Post Exporter plugin.
  *
- * @package WP_Post_Exporter
+ * @package NR_Post_Exporter
  */
 
-namespace Nikolareljin\WpPostExporter\Post;
+namespace Nikolareljin\NrPostExporter\Post;
 
 /**
  * Handles post export UI and data transformation.
@@ -45,7 +45,7 @@ class Export {
 			add_filter( 'page_row_actions', array( __CLASS__, 'add_export_link_to_post_row_actions' ), 10, 2 );
 
 			// Define custom action for post types.
-			add_action( 'admin_post_wp_post_exporter_export', array( __CLASS__, 'export_post_link_action' ) );
+			add_action( 'admin_post_nr_post_exporter_export', array( __CLASS__, 'export_post_link_action' ) );
 		}
 	}
 
@@ -61,7 +61,7 @@ class Export {
 			$actions['export'] = sprintf(
 				'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
 				esc_url( self::get_export_link( $post ) ),
-				esc_html__( 'Export', 'wp-post-exporter' )
+				esc_html__( 'Export', 'nr-post-exporter' )
 			);
 		}
 
@@ -75,10 +75,10 @@ class Export {
 	 * @return string
 	 */
 	public static function get_export_link( $post ) {
-		$nonce = wp_create_nonce( 'wp_post_exporter_export_' . $post->ID );
+		$nonce = wp_create_nonce( 'nr_post_exporter_export_' . $post->ID );
 		return add_query_arg(
 			array(
-				'action'   => 'wp_post_exporter_export',
+				'action'   => 'nr_post_exporter_export',
 				'post'     => $post->ID,
 				'_wpnonce' => $nonce,
 			),
@@ -109,24 +109,24 @@ class Export {
 	 */
 	public static function export_post_link_action() {
 		$action = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
-		if ( 'wp_post_exporter_export' !== $action ) {
+		if ( 'nr_post_exporter_export' !== $action ) {
 			return;
 		}
 
 		$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
 		$nonce   = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 
-		if ( ! $post_id || ! wp_verify_nonce( $nonce, 'wp_post_exporter_export_' . $post_id ) ) {
-			wp_die( esc_html__( 'Invalid request.', 'wp-post-exporter' ) );
+		if ( ! $post_id || ! wp_verify_nonce( $nonce, 'nr_post_exporter_export_' . $post_id ) ) {
+			wp_die( esc_html__( 'Invalid request.', 'nr-post-exporter' ) );
 		}
 
 		if ( ! current_user_can( 'export' ) ) {
-			wp_die( esc_html__( 'Insufficient permissions.', 'wp-post-exporter' ) );
+			wp_die( esc_html__( 'Insufficient permissions.', 'nr-post-exporter' ) );
 		}
 
 		$post = get_post( $post_id );
 		if ( ! $post instanceof \WP_Post ) {
-			wp_die( esc_html__( 'Post not found.', 'wp-post-exporter' ) );
+			wp_die( esc_html__( 'Post not found.', 'nr-post-exporter' ) );
 		}
 
 		$site_name = self::get_site_name();
@@ -250,7 +250,7 @@ class Export {
 				// Get terms for the post.
 				$terms = get_the_terms( $post_id, $taxonomy );
 			} catch ( \Exception $e ) {
-				error_log( 'WP Post Exporter - Export terms: ' . $e->getMessage() );
+error_log( 'NR Post Exporter - Export terms: ' . $e->getMessage() );
 				$terms = array();
 			}
 

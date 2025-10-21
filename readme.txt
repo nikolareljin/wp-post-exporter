@@ -1,4 +1,4 @@
-=== WP Post Exporter ===
+=== NR Post Exporter ===
 Contributors: nikolareljin
 Donate link: https://profiles.wordpress.org/nikolareljin/
 Tags: export, import, post, meta, revisions, tools
@@ -30,7 +30,7 @@ Perfect for
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/wp-post-exporter` directory, or install via the WordPress Plugins screen.
+1. Upload the plugin files to the `/wp-content/plugins/nr-post-exporter` directory, or install via the WordPress Plugins screen.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. To export: go to Posts → All Posts (or Pages), hover a row, click Export.
 4. To import: go to Tools → Post Import and upload the exported JSON file.

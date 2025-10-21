@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  PLUGIN_SLUG: wp-post-exporter
+  PLUGIN_SLUG: nr-post-exporter
 
 jobs:
   prepare:
@@ -31,4 +31,3 @@ jobs:
           echo "Submit the plugin at: https://wordpress.org/plugins/developers/add/"
           echo "Use the built ZIP: dist/${PLUGIN_SLUG}.zip"
           echo "Ensure your WP.org account matches SVN credentials used in deploy."
-

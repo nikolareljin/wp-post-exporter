@@ -32,7 +32,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y subversion
-          if svn ls https://plugins.svn.wordpress.org/wp-post-exporter > /dev/null 2>&1; then
+          if svn ls https://plugins.svn.wordpress.org/nr-post-exporter > /dev/null 2>&1; then
             echo "SVN_EXISTS=true" >> $GITHUB_ENV
           else
             echo "SVN_EXISTS=false" >> $GITHUB_ENV

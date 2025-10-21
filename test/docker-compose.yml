@@ -25,7 +25,7 @@ services:
     volumes:
       - wp_core:/var/www/html
       # Mount this plugin into WordPress
-      - ../:/var/www/html/wp-content/plugins/wp-post-exporter:rw
+      - ../:/var/www/html/wp-content/plugins/nr-post-exporter:rw
       # Keep uploads if needed between runs
       - wp_uploads:/var/www/html/wp-content/uploads
 
@@ -44,7 +44,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - wp_core:/var/www/html
-      - ../:/var/www/html/wp-content/plugins/wp-post-exporter:rw
+      - ../:/var/www/html/wp-content/plugins/nr-post-exporter:rw
       - wp_uploads:/var/www/html/wp-content/uploads
       - ./wp-cli.yml:/tmp/wp-cli.yml:ro
       - ./:/workspace:rw

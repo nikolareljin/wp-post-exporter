@@ -1,13 +1,13 @@
 {
-  "name": "nikolareljin/wp-post-exporter",
+  "name": "nikolareljin/nr-post-exporter",
   "description": "Export and import individual WordPress posts (with meta, terms, and revisions).",
   "type": "wordpress-plugin",
   "license": "MIT",
-  "homepage": "https://github.com/nikolareljin/wp-post-exporter",
+  "homepage": "https://github.com/nikolareljin/nr-post-exporter",
   "keywords": ["wordpress", "plugin", "export", "import", "posts", "revisions"],
   "support": {
-    "issues": "https://github.com/nikolareljin/wp-post-exporter/issues",
-    "source": "https://github.com/nikolareljin/wp-post-exporter"
+    "issues": "https://github.com/nikolareljin/nr-post-exporter/issues",
+    "source": "https://github.com/nikolareljin/nr-post-exporter"
   },
   "authors": [
     {
@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Nikolareljin\\WpPostExporter\\": "inc/"
+      "Nikolareljin\\NrPostExporter\\": "inc/"
     }
   },
   "scripts": {

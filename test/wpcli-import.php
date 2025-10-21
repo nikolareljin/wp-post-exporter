@@ -1,7 +1,7 @@
 <?php
 // Usage: wp eval-file /workspace/wpcli-import.php <input_path> [--url=...] [--user=...]
 
-use Nikolareljin\WpPostExporter\Post\Import;
+use Nikolareljin\NrPostExporter\Post\Import;
 
 if (!defined('ABSPATH')) {
     exit(1);

@@ -7,7 +7,7 @@ Development setup
 Install dev dependencies
 
 ```
-cd wp-post-exporter
+cd nr-post-exporter
 composer install
 ```
 
@@ -21,7 +21,7 @@ composer run lint:fix
 Build ZIP (respects .distignore)
 
 ```
-cd wp-post-exporter
+cd nr-post-exporter
 bash bin/build-zip.sh
 ```
 
@@ -31,6 +31,14 @@ Release to WordPress.org
 - Ensure assets/ contains banner/icon images per assets/ASSETS.md
 
 Packagist
-- Submit the GitHub repository to Packagist with name `nikolareljin/wp-post-exporter`
+- Submit the GitHub repository to Packagist with name `nikolareljin/nr-post-exporter`
 - Packagist will auto-update on tags; `type: wordpress-plugin` is set for installers
 
+Repository rename
+- The project has been renamed to `nr-post-exporter`. To update your local git remote:
+
+```
+bash bin/update-remote.sh
+# or specify a custom URL
+bash bin/update-remote.sh origin https://github.com/nikolareljin/nr-post-exporter.git
+```

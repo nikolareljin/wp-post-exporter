@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
     exit(1);
 }
 
-$plugin_file = WP_PLUGIN_DIR . '/wp-post-exporter/wp-post-exporter.php';
-$readme_file = WP_PLUGIN_DIR . '/wp-post-exporter/readme.txt';
+$plugin_file = WP_PLUGIN_DIR . '/nr-post-exporter/nr-post-exporter.php';
+$readme_file = WP_PLUGIN_DIR . '/nr-post-exporter/readme.txt';
 
 if (!is_readable($plugin_file)) {
     fwrite(STDERR, "Plugin file not found: {$plugin_file}\n");
@@ -53,7 +53,7 @@ if (is_readable($readme_file)) {
     }
 }
 
-$slug = 'wp-post-exporter';
+$slug = 'nr-post-exporter';
 
 // Run checks.
 $results = array();
@@ -107,4 +107,3 @@ echo wp_json_encode(array(
     'readme'         => $readme,
     'checks'         => $results,
 )) . "\n";
-

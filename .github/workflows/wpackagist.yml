@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  PLUGIN_SLUG: wp-post-exporter
+  PLUGIN_SLUG: nr-post-exporter
 
 jobs:
   refresh:
@@ -33,4 +33,3 @@ jobs:
       - name: Skip refresh (SVN repo not found)
         if: env.SVN_EXISTS != 'true'
         run: echo "SVN repo not found; WPackagist refresh skipped."
-

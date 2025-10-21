@@ -5,7 +5,7 @@ cd "$(dirname "$0")/../.."
 
 compose="docker compose -f test/docker-compose.yml"
 
-PLUGIN_SLUG=wp-post-exporter
+PLUGIN_SLUG=nr-post-exporter
 BASE_URL=http://localhost:8080
 ADMIN_USER=admin
 SITE_URL=${BASE_URL}

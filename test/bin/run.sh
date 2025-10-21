@@ -35,7 +35,7 @@ $compose run --rm wpcli sh -lc "wp site list --field=path | grep -q '^/test1/' |
 $compose run --rm wpcli sh -lc "wp site list --field=path | grep -q '^/test2/' || wp site create --slug=test2 --title='Test 2'"
 
 info "Activating plugin network-wide…"
-$compose run --rm wpcli sh -lc "wp plugin activate wp-post-exporter --network"
+$compose run --rm wpcli sh -lc "wp plugin activate nr-post-exporter --network"
 
 info "Seeding taxonomies on test1…"
 $compose run --rm wpcli sh -lc "wp --url='${SITE1_URL}' term create category 'Κατηγορία' --slug='utf-katigoria' || true"
