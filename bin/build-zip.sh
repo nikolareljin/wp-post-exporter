@@ -21,6 +21,10 @@ fi
 # Always exclude test directory from the distributable
 rm -rf "${BUILD_DIR}/test"
 
+# Ensure hidden repo helper files are not shipped
+rm -f "${BUILD_DIR}/.distignore" || true
+rm -f "${BUILD_DIR}/.gitignore" || true
+
 mkdir -p dist
 cd .build
 zip -r "../dist/${PLUGIN_SLUG}.zip" "${PLUGIN_SLUG}" >/dev/null

@@ -7,7 +7,7 @@
  * Author URI:        https://profiles.wordpress.org/nikolareljin/
  * Version:           1.0.0
  * Requires at least: 5.8
- * Tested up to:      6.6
+ * Tested up to:      6.8
  * Requires PHP:      7.4
  * License:           MIT
  * License URI:       https://opensource.org/licenses/MIT
@@ -44,13 +44,8 @@ if ( ! class_exists( '\\Nikolareljin\\NrPostExporter\\Post\\Import' ) ) {
 use Nikolareljin\NrPostExporter\Post\Export;
 use Nikolareljin\NrPostExporter\Post\Import;
 
-// Load translations, if available.
-add_action(
-	'init',
-	static function () {
-		load_plugin_textdomain( 'nr-post-exporter', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-	}
-);
+// Since WordPress 4.6, translations for plugins hosted on WordPress.org
+// are loaded automatically and do not need an explicit call.
 
 // Initialize hooks after plugins load to ensure WP is ready.
 add_action(

@@ -31,6 +31,9 @@ $compose run --rm wpcli sh -lc "wp plugin activate ${PLUGIN_SLUG} --network || w
 echo "[INFO] Installing/activating plugin-check …"
 $compose run --rm wpcli sh -lc "wp plugin install plugin-check --activate || true"
 
+echo "[INFO] Removing hidden files not allowed by WP.org from plugin dir (container only) …"
+$compose run --rm wpcli sh -lc "rm -f wp-content/plugins/${PLUGIN_SLUG}/.distignore wp-content/plugins/${PLUGIN_SLUG}/languages/.gitkeep || true"
+
 echo "[INFO] Running plugin-check via WP-CLI (if available)…"
 set -o pipefail
 if $compose run --rm wpcli sh -lc "wp help plugin | grep -q '\<check\>'"; then

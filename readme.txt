@@ -3,7 +3,7 @@ Contributors: nikolareljin
 Donate link: https://profiles.wordpress.org/nikolareljin/
 Tags: export, import, post, meta, revisions, tools
 Requires at least: 5.8
-Tested up to: 6.6
+Tested up to: 6.8
 Stable tag: 1.0.0
 Requires PHP: 7.4
 License: MIT
