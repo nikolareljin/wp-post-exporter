@@ -45,7 +45,7 @@ class Export {
 			add_filter( 'page_row_actions', array( __CLASS__, 'add_export_link_to_post_row_actions' ), 10, 2 );
 
 			// Define custom action for post types.
-			add_action( 'admin_post_nr_post_exporter_export', array( __CLASS__, 'export_post_link_action' ) );
+			add_action( 'admin_post_nrpexp_export', array( __CLASS__, 'export_post_link_action' ) );
 		}
 	}
 
@@ -75,10 +75,10 @@ class Export {
 	 * @return string
 	 */
 	public static function get_export_link( $post ) {
-		$nonce = wp_create_nonce( 'nr_post_exporter_export_' . $post->ID );
+		$nonce = wp_create_nonce( 'nrpexp_export_' . $post->ID );
 		return add_query_arg(
 			array(
-				'action'   => 'nr_post_exporter_export',
+				'action'   => 'nrpexp_export',
 				'post'     => $post->ID,
 				'_wpnonce' => $nonce,
 			),
@@ -109,14 +109,14 @@ class Export {
 	 */
 	public static function export_post_link_action() {
 		$action = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
-		if ( 'nr_post_exporter_export' !== $action ) {
+		if ( 'nrpexp_export' !== $action ) {
 			return;
 		}
 
 		$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
 		$nonce   = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 
-		if ( ! $post_id || ! wp_verify_nonce( $nonce, 'nr_post_exporter_export_' . $post_id ) ) {
+		if ( ! $post_id || ! wp_verify_nonce( $nonce, 'nrpexp_export_' . $post_id ) ) {
 			wp_die( esc_html__( 'Invalid request.', 'nr-post-exporter' ) );
 		}
 
@@ -249,9 +249,9 @@ class Export {
 			try {
 				// Get terms for the post.
 				$terms = get_the_terms( $post_id, $taxonomy );
-			} catch ( \Exception $e ) {
-				error_log( 'NR Post Exporter - Export terms: ' . $e->getMessage() );
-				$terms = array();
+				} catch ( \Exception $e ) {
+					do_action( 'nrpexp_export_terms_error', $e, $taxonomy, $post_id );
+					$terms = array();
 			}
 
 			if ( is_array( $terms ) ) {

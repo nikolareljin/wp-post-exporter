@@ -13,11 +13,14 @@ What this does
 Requirements
 - Docker and Docker Compose plugin installed.
 
+Port configuration
+- Tests default to host port `8080`. If that port is taken, export `NRPEX_TEST_PORT=<available-port>` before running any scripts. All WordPress URLs and docker bindings will honor that value.
+
 Quick start
 1) Start and run the test end-to-end:
 - `bash test/bin/run.sh`
 
-2) Access the network:
+2) Access the network (replace 8080 with your `NRPEX_TEST_PORT` if overridden):
    - WP Admin: `http://localhost:8080/wp-admin/` (admin / admin)
    - test1: `http://localhost:8080/test1/`
    - test2: `http://localhost:8080/test2/`
@@ -34,4 +37,5 @@ Plugin Check
   - `test/tmp/plugin-check.json` (if WP-CLI command is available)
   - `test/tmp/meta-check.json` (header/readme consistency checks)
 - Notes:
+  - The script rebuilds a distributable copy using `.distignore` and mounts it into the containers, matching what you'll upload to WordPress.org.
   - The official Plugin Check plugin is installed into the test site. Some checks may only be available via WP Admin (Tools → Plugin Check). The script will still generate meta checks JSON even if the WP-CLI command is not available.

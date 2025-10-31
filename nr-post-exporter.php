@@ -30,15 +30,19 @@ if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
 }
 
 // Define common plugin paths.
-define( __NAMESPACE__ . '\\PATH', __DIR__ . '/' );
-define( __NAMESPACE__ . '\\URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
+if ( ! defined( 'NRPEXPORTER_PLUGIN_PATH' ) ) {
+	define( 'NRPEXPORTER_PLUGIN_PATH', __DIR__ . '/' );
+}
+if ( ! defined( 'NRPEXPORTER_PLUGIN_URL' ) ) {
+	define( 'NRPEXPORTER_PLUGIN_URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
+}
 
 // Fallback requires if no Composer autoload is available.
 if ( ! class_exists( '\\Nikolareljin\\NrPostExporter\\Post\\Export' ) ) {
-	require_once PATH . 'inc/Post/Export.php';
+	require_once NRPEXPORTER_PLUGIN_PATH . 'inc/Post/Export.php';
 }
 if ( ! class_exists( '\\Nikolareljin\\NrPostExporter\\Post\\Import' ) ) {
-	require_once PATH . 'inc/Post/Import.php';
+	require_once NRPEXPORTER_PLUGIN_PATH . 'inc/Post/Import.php';
 }
 
 use Nikolareljin\NrPostExporter\Post\Export;
@@ -55,19 +59,19 @@ add_action(
 		Export::init();
 
 		// Register handler for the file upload import action.
-		add_action( 'admin_post_nr_post_exporter_import', array( Import::class, 'post_import' ) );
-	}
+		add_action( 'admin_post_nrpexp_import', array( Import::class, 'post_import' ) );
+}
 );
 
 // Simple admin page to expose the Import Post form.
 add_action(
-	'admin_menu',
-	static function () {
-		add_management_page(
-			__( 'Post Import', 'nr-post-exporter' ),
-			__( 'Post Import', 'nr-post-exporter' ),
-			'edit_posts',
-			'nr-post-exporter-import',
+		'admin_menu',
+		static function () {
+			add_management_page(
+				__( 'Post Import', 'nr-post-exporter' ),
+				__( 'Post Import', 'nr-post-exporter' ),
+				'edit_posts',
+				'nrpexp-import',
 			function () {
 				echo '<div class="wrap">';
 				echo '<h1>' . esc_html__( 'Import Post', 'nr-post-exporter' ) . '</h1>';
