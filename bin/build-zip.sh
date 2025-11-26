@@ -14,7 +14,6 @@ mkdir -p "${BUILD_DIR}"
 rm -f "dist/${PLUGIN_SLUG}.zip" || true
 
 # Sync files while excluding from .distignore if present
-# Sync files while excluding from .distignore if present
 if [[ -f .distignore ]]; then
   rsync -av --delete --exclude-from=.distignore ./ "${BUILD_DIR}/"
 else
