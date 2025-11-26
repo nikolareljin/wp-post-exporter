@@ -21,8 +21,10 @@ else
   rsync -av --delete ./ "${BUILD_DIR}/" --exclude ".build" --exclude "build" --exclude ".git" --exclude "node_modules" --exclude "vendor"
 fi
 
-# Always exclude test directory from the distributable
-rm -rf "${BUILD_DIR}/test"
+# Always exclude build artifacts and dev-only directories from the distributable
+rm -rf "${BUILD_DIR}/test" || true
+rm -rf "${BUILD_DIR}/.build" || true
+rm -rf "${BUILD_DIR}/dist" || true
 
 # Ensure hidden repo helper files are not shipped
 rm -f "${BUILD_DIR}/.distignore" || true

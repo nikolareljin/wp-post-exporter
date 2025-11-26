@@ -39,7 +39,7 @@ info "Waiting 15s for DB to initialize…"
 sleep 15
 
 info "Ensuring WordPress (not yet installed) and configuring multisite…"
-$compose run --rm wpcli sh -lc "if ! wp core is-installed; then wp config set WP_ALLOW_MULTISITE true --raw || true; wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --skip-check || true; wp core multisite-install --url=localhost:${HOST_PORT} --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='${ADMIN_PASS}' --admin_email='${ADMIN_EMAIL}' --skip-email --subdomains=0; else echo 'WordPress already installed'; fi"
+$compose run --rm wpcli sh -lc "if ! wp core is-installed; then wp config set WP_ALLOW_MULTISITE true --raw || true; wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --skip-check || true; wp core multisite-install --url=localhost:${HOST_PORT} --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='${ADMIN_PASS}' --admin_email='${ADMIN_EMAIL}' --skip-email --subdomains=0; else echo 'WordPress already installed'; fi; wp config set WP_DEBUG true --raw || true; wp config set WP_DEBUG_DISPLAY true --raw || true"
 
 info "Creating sites test1 and test2 if missing…"
 $compose run --rm wpcli sh -lc "wp site list --field=path | grep -q '^/test1/' || wp site create --slug=test1 --title='Test 1'"

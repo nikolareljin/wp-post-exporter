@@ -2,12 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2025-10-31
+## [Unreleased]
+
+## [1.0.1] - 2025-11-26
 ### Changed
-- Standardized plugin-specific constants and admin hooks to the `nrpexp` prefix to avoid collisions.
-- Unified export/import nonces and action slugs under the new prefix for consistency with WordPress guidelines.
-- Updated `readme.txt` metadata: added contributor `nreljin`, trimmed tags to five, and shortened the description to WordPress.org limits.
-- Swapped `error_log()` call for the `nrpexp_export_terms_error` action to surface term export failures without shipping debug logging.
+- Standardize constants and admin hooks under `nrpexp` prefix to avoid collisions.
+- Unify export/import nonces and action slugs for consistency with WordPress guidelines.
+- Update `readme.txt`: add `nreljin` to Contributors, limit tags to 5, and keep short description under 150 chars.
+- Replace debug logging with `nrpexp_export_terms_error` action for term export failures.
 
 ## [1.0.0] - 2025-10-19
 ### Added
@@ -17,3 +19,4 @@ All notable changes to this project will be documented in this file.
 - Adds Export row action and Tools → Post Import page
 
 [1.0.0]: https://github.com/nikolareljin/nr-post-exporter/releases/tag/v1.0.0
+[1.0.1]: https://github.com/nikolareljin/nr-post-exporter/releases/tag/v1.0.1

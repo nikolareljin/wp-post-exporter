@@ -2,6 +2,8 @@
 /.github
 /.gitignore
 /.editorconfig
+/.build
+/dist
 /composer.lock
 /package.json
 /package-lock.json
@@ -14,4 +16,3 @@
 /phpcs.xml
 /.idea
 /.vscode
-
