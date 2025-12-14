@@ -30,19 +30,19 @@ if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
 }
 
 // Define common plugin paths.
-if ( ! defined( 'NRPEXPORTER_PLUGIN_PATH' ) ) {
-	define( 'NRPEXPORTER_PLUGIN_PATH', __DIR__ . '/' );
+if ( ! defined( 'NRPEXP_PLUGIN_PATH' ) ) {
+	define( 'NRPEXP_PLUGIN_PATH', __DIR__ . '/' );
 }
-if ( ! defined( 'NRPEXPORTER_PLUGIN_URL' ) ) {
-	define( 'NRPEXPORTER_PLUGIN_URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
+if ( ! defined( 'NRPEXP_PLUGIN_URL' ) ) {
+	define( 'NRPEXP_PLUGIN_URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
 }
 
 // Fallback requires if no Composer autoload is available.
 if ( ! class_exists( '\\Nikolareljin\\NrPostExporter\\Post\\Export' ) ) {
-	require_once NRPEXPORTER_PLUGIN_PATH . 'inc/Post/Export.php';
+	require_once NRPEXP_PLUGIN_PATH . 'inc/Post/Export.php';
 }
 if ( ! class_exists( '\\Nikolareljin\\NrPostExporter\\Post\\Import' ) ) {
-	require_once NRPEXPORTER_PLUGIN_PATH . 'inc/Post/Import.php';
+	require_once NRPEXP_PLUGIN_PATH . 'inc/Post/Import.php';
 }
 
 use Nikolareljin\NrPostExporter\Post\Export;

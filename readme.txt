@@ -1,5 +1,5 @@
 === NR Post Exporter ===
-Contributors: nreljin, nikolareljin
+Contributors: nreljin
 Donate link: https://profiles.wordpress.org/nikolareljin/
 Tags: export, import, posts, revisions, tools
 Requires at least: 5.8
@@ -9,7 +9,7 @@ Requires PHP: 7.4
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
-Export and import single posts with meta, terms, and revisions. Adds an Export row action and an Import screen under Tools.
+Export/import single posts with meta, terms, and revisions. Adds an Export row action plus a Tools → Post Import screen.
 
 == Description ==
 
