@@ -60,25 +60,25 @@ add_action(
 
 		// Register handler for the file upload import action.
 		add_action( 'admin_post_nrpexp_import', array( Import::class, 'post_import' ) );
-}
+	}
 );
 
 // Simple admin page to expose the Import Post form.
 add_action(
-		'admin_menu',
-		static function () {
+	'admin_menu',
+	static function () {
 			add_management_page(
 				__( 'Post Import', 'nr-post-exporter' ),
 				__( 'Post Import', 'nr-post-exporter' ),
 				'edit_posts',
 				'nrpexp-import',
-			function () {
-				echo '<div class="wrap">';
-				echo '<h1>' . esc_html__( 'Import Post', 'nr-post-exporter' ) . '</h1>';
-				echo '<p>' . esc_html__( 'Upload a previously exported JSON file to create a copy of that post (including meta, taxonomies, and revisions).', 'nr-post-exporter' ) . '</p>';
-				Import::import_post_button();
-				echo '</div>';
-			}
-		);
+				function () {
+					echo '<div class="wrap">';
+					echo '<h1>' . esc_html__( 'Import Post', 'nr-post-exporter' ) . '</h1>';
+					echo '<p>' . esc_html__( 'Upload a previously exported JSON file to create a copy of that post (including meta, taxonomies, and revisions).', 'nr-post-exporter' ) . '</p>';
+					Import::import_post_button();
+					echo '</div>';
+				}
+			);
 	}
 );

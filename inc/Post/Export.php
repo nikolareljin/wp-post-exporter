@@ -249,9 +249,9 @@ class Export {
 			try {
 				// Get terms for the post.
 				$terms = get_the_terms( $post_id, $taxonomy );
-				} catch ( \Exception $e ) {
-					do_action( 'nrpexp_export_terms_error', $e, $taxonomy, $post_id );
-					$terms = array();
+			} catch ( \Exception $e ) {
+				do_action( 'nrpexp_export_terms_error', $e, $taxonomy, $post_id );
+				$terms = array();
 			}
 
 			if ( is_array( $terms ) ) {
