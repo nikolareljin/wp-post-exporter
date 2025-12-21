@@ -7,7 +7,7 @@
  * Author URI:        https://profiles.wordpress.org/nikolareljin/
  * Version:           0.1.2
  * Requires at least: 5.8
- * Tested up to:      6.8
+ * Tested up to:      6.9
  * Requires PHP:      7.4
  * License:           MIT
  * License URI:       https://opensource.org/licenses/MIT

@@ -3,7 +3,7 @@ Contributors: nreljin
 Donate link: https://profiles.wordpress.org/nikolareljin/
 Tags: export, import, posts, revisions, tools
 Requires at least: 5.8
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 0.1.2
 Requires PHP: 7.4
 License: MIT
