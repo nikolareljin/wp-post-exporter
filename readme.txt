@@ -1,5 +1,5 @@
 === NR Post Exporter ===
-Contributors: nikolareljin
+Contributors: nreljin
 Donate link: https://profiles.wordpress.org/nikolareljin/
 Tags: export, import, posts, revisions
 Requires at least: 5.8
