@@ -5,9 +5,9 @@
  * Description:       Export and import individual WordPress posts (with meta, terms, and revisions).
  * Author:            Nikola Reljin
  * Author URI:        https://profiles.wordpress.org/nikolareljin/
- * Version:           1.0.0
+ * Version:           0.1.2
  * Requires at least: 5.8
- * Tested up to:      6.8
+ * Tested up to:      6.9
  * Requires PHP:      7.4
  * License:           MIT
  * License URI:       https://opensource.org/licenses/MIT
@@ -30,15 +30,19 @@ if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
 }
 
 // Define common plugin paths.
-define( __NAMESPACE__ . '\\PATH', __DIR__ . '/' );
-define( __NAMESPACE__ . '\\URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
+if ( ! defined( 'NRPEXP_PLUGIN_PATH' ) ) {
+	define( 'NRPEXP_PLUGIN_PATH', __DIR__ . '/' );
+}
+if ( ! defined( 'NRPEXP_PLUGIN_URL' ) ) {
+	define( 'NRPEXP_PLUGIN_URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
+}
 
 // Fallback requires if no Composer autoload is available.
 if ( ! class_exists( '\\Nikolareljin\\NrPostExporter\\Post\\Export' ) ) {
-	require_once PATH . 'inc/Post/Export.php';
+	require_once NRPEXP_PLUGIN_PATH . 'inc/Post/Export.php';
 }
 if ( ! class_exists( '\\Nikolareljin\\NrPostExporter\\Post\\Import' ) ) {
-	require_once PATH . 'inc/Post/Import.php';
+	require_once NRPEXP_PLUGIN_PATH . 'inc/Post/Import.php';
 }
 
 use Nikolareljin\NrPostExporter\Post\Export;
@@ -55,7 +59,7 @@ add_action(
 		Export::init();
 
 		// Register handler for the file upload import action.
-		add_action( 'admin_post_nr_post_exporter_import', array( Import::class, 'post_import' ) );
+		add_action( 'admin_post_nrpexp_import', array( Import::class, 'post_import' ) );
 	}
 );
 
@@ -63,18 +67,18 @@ add_action(
 add_action(
 	'admin_menu',
 	static function () {
-		add_management_page(
-			__( 'Post Import', 'nr-post-exporter' ),
-			__( 'Post Import', 'nr-post-exporter' ),
-			'edit_posts',
-			'nr-post-exporter-import',
-			function () {
-				echo '<div class="wrap">';
-				echo '<h1>' . esc_html__( 'Import Post', 'nr-post-exporter' ) . '</h1>';
-				echo '<p>' . esc_html__( 'Upload a previously exported JSON file to create a copy of that post (including meta, taxonomies, and revisions).', 'nr-post-exporter' ) . '</p>';
-				Import::import_post_button();
-				echo '</div>';
-			}
-		);
+			add_management_page(
+				__( 'Post Import', 'nr-post-exporter' ),
+				__( 'Post Import', 'nr-post-exporter' ),
+				'edit_posts',
+				'nrpexp-import',
+				function () {
+					echo '<div class="wrap">';
+					echo '<h1>' . esc_html__( 'Import Post', 'nr-post-exporter' ) . '</h1>';
+					echo '<p>' . esc_html__( 'Upload a previously exported JSON file to create a copy of that post (including meta, taxonomies, and revisions).', 'nr-post-exporter' ) . '</p>';
+					Import::import_post_button();
+					echo '</div>';
+				}
+			);
 	}
 );

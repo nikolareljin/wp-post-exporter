@@ -6,12 +6,29 @@ cd "$(dirname "$0")/../.."
 compose="docker compose -f test/docker-compose.yml"
 
 PLUGIN_SLUG=nr-post-exporter
-BASE_URL=http://localhost:8080
+HOST_PORT=${NRPEX_TEST_PORT:-8080}
+BASE_URL="http://localhost:${HOST_PORT}"
 ADMIN_USER=admin
 SITE_URL=${BASE_URL}
 
 OUT_DIR=test/tmp
 mkdir -p "$OUT_DIR"
+
+# Build a sanitized copy of the plugin that mirrors the distribution payload.
+echo "[INFO] Building distributable copy via bin/build-zip.sh …"
+bash bin/build-zip.sh >/dev/null
+BUILD_DIR=".build/${PLUGIN_SLUG}"
+export NRPEX_PLUGIN_SRC="$(pwd)/${BUILD_DIR}"
+
+WP_CLI_CONFIG="${OUT_DIR}/wp-cli.yml"
+cat > "${WP_CLI_CONFIG}" <<EOF
+path: /var/www/html
+url: http://localhost:${HOST_PORT}
+color: false
+disable_wp_cron: true
+apache_modules:
+  - mod_rewrite
+EOF
 
 echo "[INFO] Ensuring containers are up…"
 $compose up -d db wordpress
@@ -23,7 +40,7 @@ echo "[INFO] Ensuring WordPress is installed (multisite) …"
 $compose run --rm wpcli sh -lc 'test -f wp-config.php || wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --skip-check'
 $compose run --rm wpcli sh -lc 'wp config set WP_ALLOW_MULTISITE true --raw || true'
 
-$compose run --rm wpcli sh -lc "wp core is-installed || wp core multisite-install --url=localhost:8080 --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='admin' --admin_email='admin@example.com' --skip-email --subdomains=0"
+$compose run --rm wpcli sh -lc "wp core is-installed || wp core multisite-install --url=localhost:${HOST_PORT} --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='admin' --admin_email='admin@example.com' --skip-email --subdomains=0"
 
 echo "[INFO] Activating ${PLUGIN_SLUG} …"
 $compose run --rm wpcli sh -lc "wp plugin activate ${PLUGIN_SLUG} --network || wp plugin activate ${PLUGIN_SLUG}"

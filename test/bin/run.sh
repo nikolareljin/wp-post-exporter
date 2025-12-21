@@ -11,7 +11,8 @@ err() { echo "[ERROR] $*" 1>&2; }
 ADMIN_USER=admin
 ADMIN_PASS=admin
 ADMIN_EMAIL=admin@example.com
-BASE_URL=http://localhost:8080
+HOST_PORT=${NRPEX_TEST_PORT:-8080}
+BASE_URL="http://localhost:${HOST_PORT}"
 SITE1_URL=${BASE_URL}/test1
 SITE2_URL=${BASE_URL}/test2
 
@@ -21,6 +22,16 @@ EXPORT_PATH_HOST="test/tmp/export.json"
 
 mkdir -p test/tmp
 
+WP_CLI_CONFIG="test/tmp/wp-cli.yml"
+cat > "${WP_CLI_CONFIG}" <<EOF
+path: /var/www/html
+url: http://localhost:${HOST_PORT}
+color: false
+disable_wp_cron: true
+apache_modules:
+  - mod_rewrite
+EOF
+
 info "Starting containers (db, wordpress)…"
 $compose up -d db wordpress
 
@@ -28,7 +39,7 @@ info "Waiting 15s for DB to initialize…"
 sleep 15
 
 info "Ensuring WordPress (not yet installed) and configuring multisite…"
-$compose run --rm wpcli sh -lc "if ! wp core is-installed; then wp config set WP_ALLOW_MULTISITE true --raw || true; wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --skip-check || true; wp core multisite-install --url=localhost:8080 --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='${ADMIN_PASS}' --admin_email='${ADMIN_EMAIL}' --skip-email --subdomains=0; else echo 'WordPress already installed'; fi"
+$compose run --rm wpcli sh -lc "if ! wp core is-installed; then wp config set WP_ALLOW_MULTISITE true --raw || true; wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=db:3306 --skip-check || true; wp core multisite-install --url=localhost:${HOST_PORT} --title='WP Test Multisite' --admin_user='${ADMIN_USER}' --admin_password='${ADMIN_PASS}' --admin_email='${ADMIN_EMAIL}' --skip-email --subdomains=0; else echo 'WordPress already installed'; fi"
 
 info "Creating sites test1 and test2 if missing…"
 $compose run --rm wpcli sh -lc "wp site list --field=path | grep -q '^/test1/' || wp site create --slug=test1 --title='Test 1'"

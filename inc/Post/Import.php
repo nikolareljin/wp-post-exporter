@@ -25,13 +25,13 @@ class Import {
 		?>
 		<form
 			action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"
-			id="nr_post_exporter_import_form"
+			id="nrpexp_import_form"
 			enctype="multipart/form-data"
 			method="post">
-			<input type="hidden" name="action" value="nr_post_exporter_import"/>
+			<input type="hidden" name="action" value="nrpexp_import"/>
 			<input type="file" accept="application/json" id="upload" name="upload"/>
 			<?php
-			wp_nonce_field( 'nr_post_exporter_import', 'post_import_nonce' );
+			wp_nonce_field( 'nrpexp_import', 'post_import_nonce' );
 			submit_button( __( 'Import Post', 'nr-post-exporter' ), 'secondary', 'submit', false );
 			?>
 		</form>
@@ -51,14 +51,14 @@ class Import {
 			}
 
 			// Check if form was submitted. Then process the file.
-			if ( ! isset( $_POST['post_import_nonce'] ) || ! check_admin_referer( 'nr_post_exporter_import', 'post_import_nonce' ) ) {
+			if ( ! isset( $_POST['post_import_nonce'] ) || ! check_admin_referer( 'nrpexp_import', 'post_import_nonce' ) ) {
 				wp_die( esc_html__( 'Sorry, your nonce did not verify.', 'nr-post-exporter' ) );
 			}
 
 			$action = isset( $_POST['action'] ) ? sanitize_key( wp_unslash( $_POST['action'] ) ) : '';
 			$submit = isset( $_POST['submit'] );
 
-			if ( 'nr_post_exporter_import' === $action && $submit ) {
+			if ( 'nrpexp_import' === $action && $submit ) {
 				// Now, parse the JSON file and create a new post.
 				$upload_name = isset( $_FILES['upload']['name'] ) ? sanitize_text_field( wp_unslash( $_FILES['upload']['name'] ) ) : '';
 				if ( $upload_name ) {
@@ -70,7 +70,7 @@ class Import {
 						}
 							// Can't be larger than ~1MB.
 						if ( isset( $_FILES['upload']['size'] ) && (int) $_FILES['upload']['size'] > 1000000 ) {
-								wp_die( esc_html__( 'Your file size is too large.', 'nr-post-exporter' ) );
+										wp_die( esc_html__( 'Your file size is too large.', 'nr-post-exporter' ) );
 						} else {
 							try {
 								// Get current user's ID. We will update each reference of the author with our current user ID.
@@ -316,8 +316,8 @@ class Import {
 				);
 			}
 		} catch ( \Exception $e ) {
-				// Fall back to original payload.
-				do_action( 'nr_post_exporter_import_error', $e );
+								// Fall back to original payload.
+								do_action( 'nrpexp_import_error', $e );
 		}
 
 		return $output;
