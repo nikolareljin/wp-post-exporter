@@ -19,9 +19,10 @@ jobs:
 
       - name: Install WP-CLI
         run: |
-          curl -sS -L https://github.com/wp-cli/wp-cli/releases/latest/download/wp-cli.phar -o wp
-          chmod +x wp
-          sudo mv wp /usr/local/bin/wp
+          curl -fL -o wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          php wp-cli.phar --info
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
 
       - name: Install i18n command
         run: wp package install wp-cli/i18n-command:*
@@ -48,4 +49,3 @@ jobs:
           branch: chore/update-pot
           add-paths: |
             languages/nr-post-exporter.pot
-

@@ -7,6 +7,7 @@
 /package-lock.json
 /node_modules
 /vendor
+/test
 /tests
 /__tests__
 /bin
@@ -14,4 +15,3 @@
 /phpcs.xml
 /.idea
 /.vscode
-
