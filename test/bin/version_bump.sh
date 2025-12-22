@@ -26,11 +26,8 @@ fi
 plugin_file="nr-post-exporter.php"
 readme_file="readme.txt"
 
-current_version="$(
-  rg -n "^ \\* Version:" "$plugin_file" \
-    | sed -E 's/.*Version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+).*/\1/' \
-    | head -n1
-)"
+version_line="$(grep -n "^ \\* Version:" "$plugin_file" | head -n1)"
+current_version="$(echo "${version_line}" | sed -E 's/.*Version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+).*/\1/')"
 
 if [[ -z "${current_version}" ]]; then
   echo "Could not find Version in ${plugin_file}"
