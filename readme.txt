@@ -52,6 +52,12 @@ No. This focuses on one-post-at-a-time portability with revisions and meta fidel
 = Are images and attachments included? =
 Attachment references in content and meta are preserved as-is; media files are not transferred.
 
+= Is there a file size limit? =
+Imports are limited to about 1MB per JSON file.
+
+= Why does the title change on import? =
+Imported posts are prefixed with "Imported:" to make them easier to spot.
+
 == Screenshots ==
 1. Export link in post row actions.
 2. Import page under Tools menu.
