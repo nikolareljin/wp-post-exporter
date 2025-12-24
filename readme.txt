@@ -4,7 +4,7 @@ Donate link: https://profiles.wordpress.org/nikolareljin/
 Tags: export, import, posts, revisions
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 0.1.2
+Stable tag: 1.0.0
 Requires PHP: 7.4
 License: MIT
 License URI: https://opensource.org/licenses/MIT
@@ -51,6 +51,12 @@ No. This focuses on one-post-at-a-time portability with revisions and meta fidel
 
 = Are images and attachments included? =
 Attachment references in content and meta are preserved as-is; media files are not transferred.
+
+= Is there a file size limit? =
+Imports are limited to about 1MB per JSON file.
+
+= Why does the title change on import? =
+Imported posts are prefixed with "Imported:" to make them easier to spot.
 
 == Screenshots ==
 1. Export link in post row actions.

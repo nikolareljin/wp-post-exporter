@@ -46,6 +46,8 @@ jobs:
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: nr-post-exporter
+          SVN_URL: https://plugins.svn.wordpress.org/nr-post-exporter
 
       - name: Dry-run deploy (SVN repo not found)
         if: env.SVN_EXISTS != 'true'
@@ -53,3 +55,6 @@ jobs:
         with:
           generate-zip: false
           dry-run: true
+        env:
+          SLUG: nr-post-exporter
+          SVN_URL: https://plugins.svn.wordpress.org/nr-post-exporter
