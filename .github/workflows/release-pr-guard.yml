@@ -1,0 +1,76 @@
+name: Release PR Guard
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    types: [ opened, synchronize, reopened, edited ]
+
+jobs:
+  guard:
+    if: startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine release version
+        id: version
+        run: |
+          set -euo pipefail
+          ref="${GITHUB_HEAD_REF}"
+          version="${ref#release/}"
+          if [[ "${ref}" == "${version}" ]]; then
+            echo "::error::Release PR guard only supports release/X.Y.Z(-rcN) branches."
+            exit 1
+          fi
+          if [[ ! "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$ ]]; then
+            echo "::error::Release branch '${ref}' must match release/X.Y.Z or release/X.Y.Z-rcN."
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Fail if tag already exists
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          if git tag -l "${version}" | grep -q . || git tag -l "v${version}" | grep -q .; then
+            {
+              echo "## Release PR blocked"
+              echo ""
+              echo "Tag \`${version}\` already exists."
+              echo "Use a new release version or delete the existing tag."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::Tag ${version} already exists."
+            exit 1
+          fi
+
+      - name: Fail if release version is behind latest tag
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          latest="$(git tag -l \
+            | sed 's/^v//' \
+            | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$' \
+            | sort -V \
+            | tail -n1 || true)"
+          if [[ -n "${latest}" ]]; then
+            max="$(printf "%s\n%s\n" "${latest}" "${version}" | sort -V | tail -n1)"
+            if [[ "${max}" != "${version}" ]]; then
+              {
+                echo "## Release PR blocked"
+                echo ""
+                echo "Release branch version \`${version}\` is older than the latest tag \`${latest}\`."
+                echo ""
+                echo "Hotfix flow:"
+                echo "- Do not merge this PR into main."
+                echo "- Tag the release branch directly:"
+                echo "  \`git checkout ${GITHUB_HEAD_REF}\`"
+                echo "  \`git tag ${version}\`"
+                echo "  \`git push origin ${version}\`"
+              } >> "$GITHUB_STEP_SUMMARY"
+              echo "::error::Release version ${version} is behind latest tag ${latest}."
+              exit 1
+            fi
+          fi

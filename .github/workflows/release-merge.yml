@@ -1,0 +1,115 @@
+name: Release Merge Automation
+
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ main, master ]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout merge commit (tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Set release version
+        id: version
+        run: |
+          set -euo pipefail
+          ref="${{ github.event.pull_request.head.ref }}"
+          version="${ref#release/}"
+          if [[ ! "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$ ]]; then
+            echo "::error::Release branch '${ref}' must match release/X.Y.Z or release/X.Y.Z-rcN."
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Switch to base branch
+        run: |
+          set -euo pipefail
+          base_ref="${{ github.event.pull_request.base.ref }}"
+          git checkout -B "${base_ref}"
+
+      - name: Update version strings
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          version = os.environ["RELEASE_VERSION"]
+
+          plugin_file = Path("nr-post-exporter.php")
+          readme_file = Path("readme.txt")
+
+          plugin_text = plugin_file.read_text(encoding="utf-8")
+          plugin_text, count = re.subn(
+              r"^(\s*\*\s*Version:\s*).*$",
+              r"\1" + version,
+              plugin_text,
+              flags=re.MULTILINE,
+          )
+          if count == 0:
+              raise SystemExit("Version header not found in nr-post-exporter.php")
+          plugin_file.write_text(plugin_text, encoding="utf-8")
+
+          readme_text = readme_file.read_text(encoding="utf-8")
+          readme_text, count = re.subn(
+              r"^(Stable tag:\s*).*$",
+              r"\1" + version,
+              readme_text,
+              flags=re.MULTILINE,
+          )
+          if count == 0:
+              raise SystemExit("Stable tag not found in readme.txt")
+          readme_file.write_text(readme_text, encoding="utf-8")
+          PY
+
+      - name: Build distributable ZIP
+        run: bash bin/build-zip.sh
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit release version
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          git add nr-post-exporter.php readme.txt dist/nr-post-exporter.zip composer.lock
+          if git diff --cached --quiet; then
+            echo "::error::No version or build changes detected to commit."
+            exit 1
+          fi
+          git commit -m "chore(release): ${RELEASE_VERSION}"
+
+      - name: Tag release
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          if git tag -l "${RELEASE_VERSION}" | grep -q . || git tag -l "v${RELEASE_VERSION}" | grep -q .; then
+            echo "::error::Tag ${RELEASE_VERSION} already exists."
+            exit 1
+          fi
+          git tag "${RELEASE_VERSION}"
+
+      - name: Push release commit and tag
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -euo pipefail
+          git push origin "HEAD:${BASE_REF}"
+          git push origin --tags
